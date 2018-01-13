@@ -47,8 +47,7 @@ def gramMatrixElements(k, s, t, ssValue, ttValue):
 		try:
 			return kKernel(k, s, t) / (ssValue * ttValue) ** 0.5
 		except ZeroDivisionError:
-			print("Maximal subsequence length is less or equal to documents' minimal length."
-                      "You should decrease it")
+			print("Error: The maximal susbsequences length is less or equal to documents' minimal length.")
 			sys.exit(2)
 
 
@@ -106,7 +105,7 @@ def stringKernel(s, t):
 
 
 k = 2
-s = ['car', 'cat']
-t = ['bar', 'bat']
+s = ['car', 'cat', 'fat']
+t = ['bar', 'bat', 'mat']
 print(kKernel(k, s, t))
 print(stringKernel(s, t))
