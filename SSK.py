@@ -36,15 +36,24 @@ def kKernel(k, s, t, lambda_decay=0.5):
 
 
 # computing SSK
-def SSK(k, s, t, ssValue, ttValue):
+def gramMatrixElements(k, s, t, ssValue, ttValue):
 	if s == t:
 		return 1
 	else:
 		return kKernel(k, s, t) / ((ssValue * ttValue) ** 0.5)
 
-# computing Gram matrix
+
+# computing SSK
+def stringKernel(s, t):
+
+	
+
 
 k = 2
 s = 'cat'
 t = 'car'
 print(kKernel(k, s, t))
+
+
+
+
