@@ -2,6 +2,8 @@
 
 
 import numpy as np
+import sys
+
 
 # Parameters :
 	# lambda_decay is the decay factor
@@ -9,7 +11,8 @@ import numpy as np
 
 # computing K'
 def kPrime(k, s, t, lambda_decay=0.5):
-
+	if k == 0:
+		return 1
 	if min(len(s), len(t)) < k:
 		return 0
 	else:
@@ -23,7 +26,8 @@ def kPrime(k, s, t, lambda_decay=0.5):
 
 # computing Kn
 def kKernel(k, s, t, lambda_decay=0.5):
-
+	if k == 0:
+		return 1
 	if min(len(s), len(t)) < k:
 		return 0
 	else:
@@ -40,20 +44,69 @@ def gramMatrixElements(k, s, t, ssValue, ttValue):
 	if s == t:
 		return 1
 	else:
-		return kKernel(k, s, t) / ((ssValue * ttValue) ** 0.5)
+		try:
+			return kKernel(k, s, t) / (ssValue * ttValue) ** 0.5
+		except ZeroDivisionError:
+			print("Maximal subsequence length is less or equal to documents' minimal length."
+                      "You should decrease it")
+			sys.exit(2)
+
 
 
 # computing SSK
 def stringKernel(s, t):
-
+	S = len(s)
+	T = len(t)
 	
+	gramMatrix = np.zeros((S, T), dtype=np.float32)
+	simValue = {}
+	if s == t:
+		for i in range(S):
+			simValue[i] = kKernel(k, s[i], t[i])
+		for i in range(S):
+			for j in range(i, T):
+				gramMatrix[i, j] = gramMatrixElements(k, s, t, simValue[i], simValue[j])
+				#gramMatrix[i][j] = gramMatrix[j][i]
+				gramMatrix[i, j] = gramMatrix[j, i]
+	elif S == T:
+		simValue[1] = {}
+		simValue[2] = {}
+		for i in range(S):
+			simValue[1][i] = kKernel(k, s[i], s[i])
+		for j in range(T):
+			simValue[2][j] = kKernel(k, t[j], t[j])
+		for i in range(S):
+			for j in range(i, T):
+				gramMatrix[i, j] = gramMatrixElements(k, s[i], t[j], simValue[1][i], simValue[2][j])
+				gramMatrix[i, j] = gramMatrix[j, i]
+	else:
+		simValue[1] = {}
+		simValue[2] = {}
+		m = min(S, T)
+		for i in range(S):
+			simValue[1][i] = kKernel(k, s[i], s[i])
+		for j in range(T):
+			simValue[2][j] = kKernel(k, t[j], t[j])
+		for i in range(m):
+			for j in range(i, m):
+				gramMatrix[i, j] = gramMatrixElements(k, s[i], t[j], simValue[1][i], simValue[2][j])
+				gramMatrix[i, j] = gramMatrix[j, i]
+
+		if S > T:
+			for i in range(m, T):
+				for j in range(T):
+					gramMatrix(k, s[i], t[j], simValue[1][i], simValue[2][j])
+		else:
+			for i in range(S):
+				for j in range(m, T):
+					gramMatrix(s[i], t[j], simValue[1][i], simValue[2][j])
+	return gramMatrix
+
+
 
 
 k = 2
-s = 'cat'
-t = 'car'
+s = ['car', 'cat']
+t = ['bar', 'bat']
 print(kKernel(k, s, t))
-
-
-
-
+print(stringKernel(s, t))
