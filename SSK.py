@@ -36,10 +36,14 @@ def kKernel(k, s, t, lambda_decay=0.5):
 
 
 # computing SSK
-#def SSK(k, s, t, lambda_decay=0.5):
+def SSK(k, s, t, ssValue, ttValue):
+	if s == t:
+		return 1
+	else:
+		return kKernel(k, s, t) / ((ssValue * ttValue) ** 0.5)
 
+# computing Gram matrix
 
-lambda_decay = 0.5
 k = 2
 s = 'cat'
 t = 'car'
