@@ -1,11 +1,19 @@
 # Reference: https://www.quantstart.com/articles/Supervised-Learning-for-Document-Classification-with-Scikit-Learn
 #
 # Modified by: raghunath-v
+# Another modification to directly use the nltk package
 
 import html
 import pprint
 import re
 from html.parser import HTMLParser
+import pickle as pickle
+
+#PARAMETERS
+
+SHUFFLE_DATA = True
+SETS = ['train', 'test']
+TOPICS = ['earn', 'acq', 'crude', 'corn']
 
 
 class ReutersParser(HTMLParser):
@@ -63,11 +71,11 @@ class ReutersParser(HTMLParser):
             self.topic_d += data
     
 def obtain_topic_tags():
-    topics = open(
+    allTopics = open(
         "../data/reuters/all-topics-strings.lc.txt", "r"
     ).readlines()
-    topics = [t.strip() for t in topics]
-    return topics
+    allTopics = [t.strip() for t in allTopics]
+    return allTopics
 
 def filter_doc_list_through_topics(topics, docs):
     ref_docs = []
@@ -81,6 +89,19 @@ def filter_doc_list_through_topics(topics, docs):
                 break
     return ref_docs
 
+def generateDatasets
+
+    print("Generating new datasets ...")
+    
+    dataset = dict()
+    for set in SETS:
+        for topic in TOPICS
+            dataset[set].append()
+        
+            
+            
+    
+
         
 if __name__ == "__main__":
     # Open the first Reuters data set and create the parser
@@ -92,6 +113,6 @@ if __name__ == "__main__":
     docs = list(parser.parse(open(filename, 'rb')))
 
     # Obtain the topic tags and filter docs through it 
-    topics = obtain_topic_tags()
-    ref_docs = filter_doc_list_through_topics(topics, docs)
+    allTopics = obtain_topic_tags()
+    ref_docs = filter_doc_list_through_topics(allTopics, docs)
     pprint.pprint(ref_docs)
