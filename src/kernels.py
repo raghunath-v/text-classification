@@ -62,7 +62,11 @@ def get_ssk_recursive(s,t,k,lambdaDecay):
     #Normalisation
     k_st = k_st/get_normFactor(s, t, k, lambdaDecay)
     
-    return k_st 
+    return k_st
+
+def ssk(k,lambdaDecay):
+    return lambda x, y: get_ssk_recursive(x,y,k,lambdaDecay)
+
     
     
     
