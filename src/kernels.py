@@ -67,6 +67,31 @@ def get_ssk_recursive(s,t,k,lambdaDecay):
 def ssk(k,lambdaDecay):
     return lambda x, y: get_ssk_recursive(x,y,k,lambdaDecay)
 
+
+    
+def get_gram_matrix(k_func, s, t=None):
+    
+    if t==None:
+        t=s
+        flag=True
+        
+    S = len(s)
+    T = len(t)
+    
+    gramMatrix = np.zeros((S, T), dtype=np.float32)
+
+    if flag==True:
+        for i in range(S):
+            for j in range(i, T):
+                gramMatrix[i, j] = k_func(s[i],s[j])
+                gramMatrix[i, j] = gramMatrix[j, i]
+    else:
+        for i in range(S):
+            for j in range(T):
+                gramMatrix[i, j] = k_func(s[i],s[j])
+
+
+    return gramMatrix
     
     
     
