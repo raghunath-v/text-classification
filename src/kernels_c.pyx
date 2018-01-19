@@ -23,8 +23,8 @@ def get_charIndex(c, s):
 def get_kPrimeVal(s1,t1,k,lambdaDecay):
     
     cdef int i, m , n, m_limit, n_limit
-    cdef char* s =s1
-    cdef char* t =t1
+    s =s1
+    t =t1
     m_limit = len(s)+1
     n_limit = len(t)+1
     cdef np.ndarray[DTYPE_t, ndim=3] kPrimeVal = np.ones((k, len(s)+1, len(t)+1))
@@ -89,6 +89,30 @@ def get_ssk_recursive(s,t,k,lambdaDecay):
 def ssk(k,lambdaDecay):
     return lambda x, y: get_ssk_recursive(x,y,k,lambdaDecay)
    
+
+def get_gram_matrix(k_func, s, t=None):
+    
+    if t==None:
+        t=s
+        flag=True
+        
+    cdef int S = len(s)
+    cdef int T = len(t)
+    
+    cdef np.ndarray[DTYPE_t, ndim=2] gramMatrix = np.zeros((S, T), dtype=np.float)
+
+    if flag==True:
+        for i in range(S):
+            for j in range(i, T):
+                gramMatrix[i, j] = k_func(s[i],s[j])
+                gramMatrix[i, j] = gramMatrix[j, i]
+    else:
+        for i in range(S):
+            for j in range(T):
+                gramMatrix[i, j] = k_func(s[i],s[j])
+
+
+    return gramMatrix
     
     
 if __name__ == "__main__":
