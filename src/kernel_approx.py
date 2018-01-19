@@ -67,4 +67,4 @@ if __name__ == '__main__':
     #print(subset)
     #print(len(subset))
     x=get_ssk_approx(train_data, subset, k, 0.5)
-    saving_data(x, '../data/approx_gram_matrix')
+    dataSplit.saving_data(x, '../data/approx_gram_matrix')
