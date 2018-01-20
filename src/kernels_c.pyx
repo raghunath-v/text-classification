@@ -3,7 +3,6 @@
 import numpy as np
 import math as math
 cimport cython
-import numpy as np
 
 cimport numpy as np
 
@@ -72,7 +71,7 @@ def get_normFactor(s,t,k,lambdaDecay):
     return norm
 
 def get_ssk_recursive(s,t,k,lambdaDecay):
-    
+    print("Been here3")
     if s==t:
         return 1
     elif min(len(s), len(t)) >= k:
@@ -87,11 +86,12 @@ def get_ssk_recursive(s,t,k,lambdaDecay):
         return 0
 
 def ssk(k,lambdaDecay):
+    print("Been here2")
     return lambda x, y: get_ssk_recursive(x,y,k,lambdaDecay)
    
 
 def get_gram_matrix(k_func, s, t=None):
-    
+    print("Been here1")
     if t==None:
         t=s
         flag=True
@@ -99,11 +99,15 @@ def get_gram_matrix(k_func, s, t=None):
     cdef int S = len(s)
     cdef int T = len(t)
     
+    print("length of S: ",S)
+    print("length of T: ",T)
+    
     cdef np.ndarray[DTYPE_t, ndim=2] gramMatrix = np.zeros((S, T), dtype=np.float)
 
     if flag==True:
         for i in range(S):
             for j in range(i, T):
+                print("Evaluating ",i," ",j)
                 gramMatrix[i, j] = k_func(s[i],s[j])
                 gramMatrix[i, j] = gramMatrix[j, i]
     else:

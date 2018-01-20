@@ -1,8 +1,8 @@
 import multiprocessing as mp
 import os as os
 import operator
-import dataSplit as dataSplit
-import kernels_c as kernels_c
+import dataSplit
+import src.kernels_c as kernels_c
 import numpy as np
 from joblib import Parallel, delayed
 import math as math
@@ -19,7 +19,7 @@ def get_topNstrings(docs,size,n=1000):
     temp = sorted(strings.items(), key=operator.itemgetter(1), reverse=True)
     strings_sorted = [x[0] for x in temp]
     
-    return strings_sorted
+    return strings_sorted[:n]
 
 def get_ssk(args):
     s, t, k, lambdaDecay = args
@@ -27,6 +27,8 @@ def get_ssk(args):
 
 def get_ssk_with_index(args):
     i, j, s, t, k, lambdaDecay = args
+    if (i*j+j+1)%3800==0:
+        print ((i*j+j+1)/3800, i ,j)
     return i, j, kernels_c.get_kVal(s, t, k, lambdaDecay, kernels_c.get_kPrimeVal(s, t, k, lambdaDecay))
 
 def get_ssk_approx(docs,subset, k, lambdaDecay):
@@ -41,14 +43,18 @@ def get_ssk_approx(docs,subset, k, lambdaDecay):
 
     args = [(docs[i], docs[i], k, lambdaDecay) for i in range(len(docs))]    
     k_docs = pool.map(get_ssk, args)
+    print("Length of docs:", len(docs) )
     
     args = [(subset[i], subset[i], k, lambdaDecay) for i in range(len(subset))]    
     k_subset = pool.map(get_ssk, args)
+    print("Length of subset:", len(subset) )
 
     args = [(i, j, docs[i], subset[j], k, lambdaDecay) for i in range(len(docs)) for j in range(len(subset))]    
     results = pool.map(get_ssk_with_index, args)
+    
 
     for i, j, result in results:
+        
         denominator = math.sqrt(k_docs[i] * k_subset[j]) if k_docs[i] * k_subset[j] else 10e-30
         ssk_approx[i, j] = result / denominator
 
@@ -63,7 +69,7 @@ if __name__ == '__main__':
     train = dataSplit.load_data('../data/datasets/train')
     #trainData, testData = dh.load_pickled_data('../data/train.p', '../data/test_data_nounicode.p')
     train_data = [x[0] for x in train]
-    subset= get_topNstrings(train_data, 10)
+    subset= get_topNstrings(train_data, 3)
     #print(subset)
     #print(len(subset))
     x=get_ssk_approx(train_data, subset, k, 0.5)

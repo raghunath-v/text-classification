@@ -88,15 +88,6 @@ def filter_doc_list_through_topics(topics, docs):
                 ref_docs.append(d_tup)
                 break
     return ref_docs
-
-def generateDatasets
-
-    print("Generating new datasets ...")
-    
-    dataset = dict()
-    for set in SETS:
-        for topic in TOPICS
-            dataset[set].append()
         
             
             

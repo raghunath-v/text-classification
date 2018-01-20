@@ -6,8 +6,6 @@ from distutils.core import setup, Extension
 from Cython.Build import cythonize
 
 
-import numpy
-
 modules = [
     Extension("kernels", sources=["kernels_c.pyx"])
 ]
@@ -21,11 +19,10 @@ from distutils.extension import Extension
 import numpy
 
 extensions = [
-    Extension("kernels_c", ["kernels_c.pyx"])
+    Extension("src.kernels_c", ["kernels_c.pyx"])
 ]
 
 setup(
-    # ext_modules=cythonize("ssk_kernel_c.pyx"),
     ext_modules=cythonize(extensions),
     include_dirs=[numpy.get_include()]
 )

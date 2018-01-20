@@ -4,7 +4,7 @@ import kernels
 import dataSplit
 import pickle
 import numpy as np
-import kernels_c
+import src.kernels_c as kernels_c
 
 
 
@@ -102,7 +102,10 @@ def run_experiment(k_func, traindata, testdata, topic):
     #test_labels_bool=(np.array(test_labels)==topic)
     #print(train_labels_bool)
     
+    print('Generating Gram matrix...')
     gram_matrix_train=kernels_c.get_gram_matrix(k_func, train_datapoints)
+    print('Gram matrix generated...')
+    
     classifier_training = svm.SVC(kernel ='precomputed')
     classifier = classifier_training.fit(gram_matrix_train, train_labels_bool)
     
@@ -119,9 +122,9 @@ testdata = dataSplit.load_data('../data/datasets/test')
 #print(sampledata[1])
 
 #VARIABLES for SSK
-k=3
+k=5
 lambdaDecay=0.5
-topic='corn'
+topic='acq'
 
 run_experiment(kernels_c.ssk(k,lambdaDecay), traindata, testdata, topic)
     
