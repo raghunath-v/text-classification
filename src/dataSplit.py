@@ -100,11 +100,20 @@ def generateDatasets(seed=1337):
             doc_limit=LABELS[label][settype]
             
             label_ids = list(filter(lambda x: x.startswith(settype), reuters.fileids(label)))   # list of ids in each category
+            random.shuffle(label_ids)
                 
-            for num in label_ids[:doc_limit]:
-                docs = preprocessing(reuters.raw(num))
-                datasets[settype].append((docs,label))
-                
+            emptyCount=0
+            docCount=0
+            while docCount <= doc_limit+emptyCount:
+                docs = preprocessing(reuters.raw(label_ids[docCount]))
+                if len(docs)>=20:
+                    datasets[settype].append((docs,label))
+                else:
+                    print("Doc ",label_ids[docCount]," was empty")
+                    emptyCount=emptyCount+1
+                docCount=docCount+1
+            print(docCount-1)
+            
     print('Done.')
     
     return datasets
