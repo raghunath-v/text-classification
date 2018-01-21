@@ -99,7 +99,7 @@ def run_experiment(k_func, traindata, testdata, topic, k, lambdaDecay):
     #print(np.array(train_labels))
     
     train_labels_bool=(np.array(train_labels)==topic)
-    #test_labels_bool=(np.array(test_labels)==topic)
+    test_labels_bool=(np.array(test_labels)==topic)
     #print(train_labels_bool)
     
     
@@ -119,7 +119,7 @@ def run_experiment(k_func, traindata, testdata, topic, k, lambdaDecay):
     dataSplit.saving_data(gram_matrix_test, '../data/kernels/ssk_gram_test'+timestr+'_k'+str(k)+'_l'+str(lambdaDecay*10))
     test_labels_pred = classifier.predict(gram_matrix_test)
     #return 1
-    return evaluate_model(test_labels, test_labels_pred, topic)
+    return evaluate_model(test_labels_bool, test_labels_pred, topic)
 
 def just_train_and_test(gram_matrix_train, gram_matrix_test, traindata, testdata, topic):
     
