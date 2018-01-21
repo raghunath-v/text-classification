@@ -66,7 +66,7 @@ def evaluate_model(test_labels, predictions, topic):
     precision=0
     
     for i in range(len(test_labels)):
-        if predictions(i) == topic:
+        if predictions[i] == topic:
             if test_labels[i] == topic:
                 tp=tp+1
             else:
