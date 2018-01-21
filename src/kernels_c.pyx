@@ -114,6 +114,7 @@ def get_gram_matrix(k_func, s, t=None):
     else:
         for i in range(S):
             for j in range(T):
+                print("Evaluating ",i," ",j)
                 gramMatrix[i, j] = k_func(s[i],s[j])
 
 

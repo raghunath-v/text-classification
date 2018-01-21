@@ -9,7 +9,7 @@ import math as math
 import time
 
 
-def get_topNstrings(docs,size,n=1000):
+def get_topNstrings(docs,size,n=5000):
     strings={}
     for doc in docs:
         for i in range(len(doc) - size + 1):
@@ -71,13 +71,13 @@ def get_similarity(k1,k2):
     similarity = np.sum(k1*k2)/denominator
     return similarity
 
-def alignmentScores(data,):
+def alignmentScores(data):
     
     freq=[]
     infreq=[]
     rand=[]
     
-    for 
+    pass
     
 
                 
@@ -88,13 +88,13 @@ if __name__ == '__main__':
     train = dataSplit.load_data('../data/datasets/train')
     #trainData, testData = dh.load_pickled_data('../data/train.p', '../data/test_data_nounicode.p')
     train_data = [x[0] for x in train]
-    subset= get_topNstrings(train_data, 3)
+    subset= get_topNstrings(train_data, k)
     #print(subset)
     #print(len(subset))
     x=get_ssk_approx(train_data, subset, k, 0.5)
     
-    timestr = time.strftime("%m%d-%H%M")
-    dataSplit.saving_data(x, '../data/kernels/ssk_approx_0203'+timestr)
+    timestr = time.strftime("%m%d%H%M")
+    dataSplit.saving_data(x, '../data/kernels/ssk_approx'+timestr)
     
     
     

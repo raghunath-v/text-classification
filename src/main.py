@@ -90,10 +90,10 @@ def evaluate_model(test_labels, predictions, topic):
         
 
 
-def run_experiment(k_func, traindata, testdata, topic):
+def run_experiment(k_func, traindata, testdata, topic, k, lambdaDecay):
     
     train_datapoints,train_labels=zip(*traindata)
-    test_datapoints,test_labels=zip(*traindata)
+    test_datapoints,test_labels=zip(*testdata)
     
     print('Beginning training...')
     #print(np.array(train_labels))
@@ -102,18 +102,23 @@ def run_experiment(k_func, traindata, testdata, topic):
     #test_labels_bool=(np.array(test_labels)==topic)
     #print(train_labels_bool)
     
-    print('Generating Gram matrix...')
+    
+    print('Generating Training Gram matrix...')
     gram_matrix_train=kernels_c.get_gram_matrix(k_func, train_datapoints)
-    timestr = time.strftime("%m%d-%H%M")
-    dataSplit.saving_data(gram_matrix_train, '../data/kernels/ssk_gram_true'+timestr )
+    timestr = time.strftime("%m%d%H%M")
+    dataSplit.saving_data(gram_matrix_train, '../data/kernels/ssk_gram_train'+timestr +'_k'+str(k)+'_l'+str(lambdaDecay*10))
     print('Gram matrix generated...')
     
     classifier_training = svm.SVC(kernel ='precomputed')
     classifier = classifier_training.fit(gram_matrix_train, train_labels_bool)
     
-    gram_matrix_test = kernels.compute_Gram_matrix(k_func, train_datapoints, test_datapoints)
+    
+    print('Generating Training Test matrix...')
+    gram_matrix_test = kernels_c.get_gram_matrix(k_func, train_datapoints, test_datapoints)
+    timestr = time.strftime("%m%d%H%M")
+    dataSplit.saving_data(gram_matrix_test, '../data/kernels/ssk_gram_test'+timestr+'_k'+str(k)+'_l'+str(lambdaDecay*10))
     test_labels_pred = classifier.predict(gram_matrix_test)
-
+    #return 1
     return evaluate_model(test_labels, test_labels_pred, topic)
     
     
@@ -127,8 +132,7 @@ testdata = dataSplit.load_data('../data/datasets/test')
 k=5
 lambdaDecay=0.5
 topic='acq'
-
-run_experiment(kernels_c.ssk(k,lambdaDecay), traindata, testdata, topic)
+run_experiment(kernels_c.ssk(k,lambdaDecay), traindata, testdata, topic, k, lambdaDecay)
     
     
 
