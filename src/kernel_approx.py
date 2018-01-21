@@ -6,6 +6,8 @@ import src.kernels_c as kernels_c
 import numpy as np
 from joblib import Parallel, delayed
 import math as math
+import time
+
 
 def get_topNstrings(docs,size,n=1000):
     strings={}
@@ -54,13 +56,30 @@ def get_ssk_approx(docs,subset, k, lambdaDecay):
     
 
     for i, j, result in results:
-        
-        denominator = math.sqrt(k_docs[i] * k_subset[j]) if k_docs[i] * k_subset[j] else 10e-30
-        ssk_approx[i, j] = result / denominator
+        norm=math.sqrt(k_docs[i] * k_subset[j]) 
+        if norm==0:
+            norm = 10e-30
+        ssk_approx[i, j] = result / norm
 
     return ssk_approx
 
-                
+def get_similarity(k1,k2):
+    #Frobenius1 norm can also use np.inner
+    denominator=np.sqrt(np.sum(k1*k1)*np.sum(k2*k2))
+    if denominator==0:
+        denominator=10e-10
+    similarity = np.sum(k1*k2)/denominator
+    return similarity
+
+def alignmentScores(data,):
+    
+    freq=[]
+    infreq=[]
+    rand=[]
+    
+    for 
+    
+
                 
 if __name__ == '__main__':
     
@@ -73,4 +92,10 @@ if __name__ == '__main__':
     #print(subset)
     #print(len(subset))
     x=get_ssk_approx(train_data, subset, k, 0.5)
-    dataSplit.saving_data(x, '../data/approx_gram_matrix')
+    
+    timestr = time.strftime("%m%d-%H%M")
+    dataSplit.saving_data(x, '../data/kernels/ssk_approx_0203'+timestr)
+    
+    
+    
+    

@@ -5,7 +5,7 @@ import dataSplit
 import pickle
 import numpy as np
 import src.kernels_c as kernels_c
-
+import time
 
 
 
@@ -104,6 +104,8 @@ def run_experiment(k_func, traindata, testdata, topic):
     
     print('Generating Gram matrix...')
     gram_matrix_train=kernels_c.get_gram_matrix(k_func, train_datapoints)
+    timestr = time.strftime("%m%d-%H%M")
+    dataSplit.saving_data(gram_matrix_train, '../data/kernels/ssk_gram_true'+timestr )
     print('Gram matrix generated...')
     
     classifier_training = svm.SVC(kernel ='precomputed')

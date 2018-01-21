@@ -71,7 +71,7 @@ def get_normFactor(s,t,k,lambdaDecay):
     return norm
 
 def get_ssk_recursive(s,t,k,lambdaDecay):
-    print("Been here3")
+    #print("Been here3")
     if s==t:
         return 1
     elif min(len(s), len(t)) >= k:
@@ -86,13 +86,13 @@ def get_ssk_recursive(s,t,k,lambdaDecay):
         return 0
 
 def ssk(k,lambdaDecay):
-    print("Been here2")
+    #print("Been here2")
     return lambda x, y: get_ssk_recursive(x,y,k,lambdaDecay)
    
 
 def get_gram_matrix(k_func, s, t=None):
     flag=False
-    print("Been here1")
+    #print("Been here1")
     if t==None:
         t=s
         flag=True
@@ -110,7 +110,7 @@ def get_gram_matrix(k_func, s, t=None):
             for j in range(i, T):
                 print("Evaluating ",i," ",j)
                 gramMatrix[i, j] = k_func(s[i],s[j])
-                gramMatrix[i, j] = gramMatrix[j, i]
+                gramMatrix[j, i] = gramMatrix[i, j]
     else:
         for i in range(S):
             for j in range(T):
