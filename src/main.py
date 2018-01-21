@@ -120,6 +120,21 @@ def run_experiment(k_func, traindata, testdata, topic, k, lambdaDecay):
     test_labels_pred = classifier.predict(gram_matrix_test)
     #return 1
     return evaluate_model(test_labels, test_labels_pred, topic)
+
+def just_train_and_test(gram_matrix_train, gram_matrix_test, traindata, testdata, topic):
+    
+    train_datapoints,train_labels=zip(*traindata)
+    test_datapoints,test_labels=zip(*testdata)
+    
+    train_labels_bool=(np.array(train_labels)==topic)
+    
+    classifier_training = svm.SVC(kernel ='precomputed')
+    classifier = classifier_training.fit(gram_matrix_train, train_labels_bool)
+    test_labels_pred = classifier.predict(gram_matrix_test)
+    
+    return evaluate_model(test_labels, test_labels_pred, topic)
+    
+    
     
     
 
