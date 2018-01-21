@@ -91,6 +91,7 @@ def ssk(k,lambdaDecay):
    
 
 def get_gram_matrix(k_func, s, t=None):
+    flag=False
     print("Been here1")
     if t==None:
         t=s
