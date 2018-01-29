@@ -13,6 +13,26 @@ import re
 
 SHUFFLE_DATA = True
 SETS = ['train', 'test']
+
+LABELS = {
+        'acq': {
+            'train': 60,
+            'test': 11
+            },
+        'corn': {
+            'train': 38,
+            'test': 10
+            },
+        'crude': {
+            'train': 70,
+            'test': 12
+            },
+        'earn': {
+            'train': 90,
+            'test': 20
+            }
+        }
+'''
 LABELS = {
         'acq': {
             'train': 114,
@@ -31,7 +51,7 @@ LABELS = {
             'test': 40
             }
         }
-
+'''
 
 cachedStopWords = stopwords.words("english")
 # "stemize" the words/text, lower the letters and get rid of the numbers
@@ -106,7 +126,7 @@ def generateDatasets(seed=1337):
             docCount=0
             while docCount <= doc_limit+emptyCount:
                 docs = preprocessing(reuters.raw(label_ids[docCount]))
-                if len(docs)>=20:
+                if len(docs)>=10:
                     datasets[settype].append((docs,label))
                 else:
                     print("Doc ",label_ids[docCount]," was empty")
@@ -125,8 +145,8 @@ if __name__ == '__main__':
     
     #train, test = extract_subset_data()
     saving_data(datasets, '../data/datasets/combined' )
-    saving_data(datasets['train'], '../data/datasets/train' )
-    saving_data(datasets['test'], '../data/datasets/test' )
+    saving_data(datasets['train'], '../data/datasets/train_short_new' )
+    saving_data(datasets['test'], '../data/datasets/test_short_new' )
     #corn = load_data('../data/datasets/corn_training')
     #id = reuters.fileids('corn')[0]
     #print(reuters.raw(id))

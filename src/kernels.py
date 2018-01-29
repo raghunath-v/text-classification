@@ -70,7 +70,7 @@ def ssk(k,lambdaDecay):
 
     
 def get_gram_matrix(k_func, s, t=None):
-    
+    flag = False
     if t==None:
         t=s
         flag=True
@@ -78,17 +78,20 @@ def get_gram_matrix(k_func, s, t=None):
     S = len(s)
     T = len(t)
     
-    gramMatrix = np.zeros((S, T), dtype=np.float32)
+    gramMatrix = None; 
 
     if flag==True:
+        gramMatrix = np.zeros((S, S), dtype=np.float32)
         for i in range(S):
             for j in range(i, T):
+                print("debug")
                 gramMatrix[i, j] = k_func(s[i],s[j])
-                gramMatrix[i, j] = gramMatrix[j, i]
+                gramMatrix[j, i] = gramMatrix[i, j]
     else:
+        gramMatrix = np.zeros((T, S), dtype=np.float32)
         for i in range(S):
             for j in range(T):
-                gramMatrix[i, j] = k_func(s[i],s[j])
+                gramMatrix[i, j] = k_func(s[i], t[j])
 
 
     return gramMatrix

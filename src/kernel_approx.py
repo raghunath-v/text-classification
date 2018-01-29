@@ -1,5 +1,6 @@
 import multiprocessing as mp
 import os as os
+import matplotlib.pyplot as plt
 import operator
 import dataSplit
 import src.kernels_c as kernels_c
@@ -7,7 +8,53 @@ import numpy as np
 from joblib import Parallel, delayed
 import math as math
 import time
+import pickle as pickle
 
+def compare_subsets():
+    """
+    Run tests that are shown on Figure 1 in the article
+    :return:
+    """
+    trainData= dataSplit.load_data('../data/kernels/final/ssk_gram_train_k3_l5.0')
+
+    with open('../data/kernels/final/ssk_gram_train_k3_l5.0.pickle', 'rb') as fd:
+        trueGram = pickle.load(fd)
+    with open('../data/kernels/final/approx_gram_matrix.pickle', 'rb') as fd:
+        subkernels = pickle.load(fd)
+    print(subkernels.shape[1], 'substrings total')
+    shuffled_idx = np.random.permutation(subkernels.shape[1])
+    subkernels_shuffled = subkernels[:, shuffled_idx]
+
+    sizes = range(1, subkernels.shape[1], 1)
+    freq_sim = []
+    infreq_sim = []
+    rand_sim = []
+    for n in sizes:
+        if n % 100 == 0:
+            print(n)
+        print(n)
+        freq_gram = get_similarity(kernels_c.get_gram_matrix(np.dot, subkernels[:, :n]), trueGram)
+        infreq_gram = get_similarity(kernels_c.get_gram_matrix(np.dot, subkernels[:, -n:]), trueGram)
+        rand_gram = get_similarity(kernels_c.get_gram_matrix(np.dot, subkernels_shuffled[:, :n]), trueGram)
+
+        freq_sim.append(freq_gram)
+        infreq_sim.append(infreq_gram)
+        rand_sim.append(rand_gram)
+
+    data = np.empty((len(sizes), 4))
+    data[:, 0] = np.array(sizes)
+    data[:, 1] = freq_sim
+    data[:, 2] = infreq_sim
+    data[:, 3] = rand_sim
+
+    with open('../data/stats.pickle', 'wb') as fd:
+        pickle.dump(data, fd)
+    fig = plt.figure()
+    plt.plot(sizes, freq_sim)
+    plt.plot(sizes, infreq_sim)
+    plt.plot(sizes, rand_sim)
+    plt.legend(['Most frequent', 'Least frequent', 'Random'])
+    fig.show()
 
 def get_topNstrings(docs,size,n=5000):
     strings={}
@@ -84,7 +131,8 @@ def alignmentScores(data):
 if __name__ == '__main__':
     
     k=3
-    
+
+    """
     train = dataSplit.load_data('../data/datasets/train')
     #trainData, testData = dh.load_pickled_data('../data/train.p', '../data/test_data_nounicode.p')
     train_data = [x[0] for x in train]
@@ -92,9 +140,12 @@ if __name__ == '__main__':
     #print(subset)
     #print(len(subset))
     x=get_ssk_approx(train_data, subset, k, 0.5)
-    
+
+
     timestr = time.strftime("%m%d%H%M")
     dataSplit.saving_data(x, '../data/kernels/ssk_approx'+timestr)
+    """
+    compare_subsets()
     
     
     

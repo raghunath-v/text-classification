@@ -100,22 +100,22 @@ def get_gram_matrix(k_func, s, t=None):
     cdef int S = len(s)
     cdef int T = len(t)
     
-    print("length of S: ",S)
-    print("length of T: ",T)
+    #print("length of S: ",S)
+    #print("length of T: ",T)
     
     cdef np.ndarray[DTYPE_t, ndim=2] gramMatrix = np.zeros((S, T), dtype=np.float)
-
+ 
     if flag==True:
         for i in range(S):
             for j in range(i, T):
-                print("Evaluating ",i," ",j)
+                #print("Evaluating ",i," ",j)
                 gramMatrix[i, j] = k_func(s[i],s[j])
                 gramMatrix[j, i] = gramMatrix[i, j]
     else:
         for i in range(S):
             for j in range(T):
                 print("Evaluating ",i," ",j)
-                gramMatrix[i, j] = k_func(s[i],s[j])
+                gramMatrix[i, j] = k_func(s[i],t[j])
 
 
     return gramMatrix
